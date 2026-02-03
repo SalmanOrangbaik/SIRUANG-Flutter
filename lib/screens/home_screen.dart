@@ -4,9 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:siruangflutter/models/booking_model.dart';
 import 'package:siruangflutter/screens/booking_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final double heroHeight = MediaQuery.of(context).size.height * 0.7;

@@ -5,9 +5,14 @@ import 'package:siruangflutter/models/ruang_model.dart';
 import 'package:siruangflutter/screens/ruang_detail_screen.dart';
 import '../controller/ruang_controller.dart';
 
-class RuangScreen extends StatelessWidget {
+class RuangScreen extends StatefulWidget {
   const RuangScreen({super.key});
 
+  @override
+  State<RuangScreen> createState() => _RuangScreenState();
+}
+
+class _RuangScreenState extends State<RuangScreen> {
   @override
   Widget build(BuildContext context) {
     final RuangController ruangC = Get.put(RuangController());

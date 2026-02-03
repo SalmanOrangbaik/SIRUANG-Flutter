@@ -5,9 +5,14 @@ import '../controller/ruang_controller.dart';
 import '../controller/booking_controller.dart';
 import '../models/ruang_model.dart';
 
-class BookingScreen extends StatelessWidget {
+class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
 
+  @override
+  State<BookingScreen> createState() => _BookingScreenState();
+}
+
+class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     final RuangController ruangC = Get.find<RuangController>();
