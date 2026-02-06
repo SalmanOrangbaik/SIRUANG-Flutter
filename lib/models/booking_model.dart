@@ -1,3 +1,5 @@
+import 'package:siruangflutter/models/ruang_model.dart';
+
 class Booking {
   final int? id;
   final int? userId;
@@ -6,6 +8,7 @@ class Booking {
   final String jamMulai;
   final String jamSelesai;
   final String status;
+  final Ruangan? ruang;
 
   Booking({
     this.id,
@@ -15,6 +18,7 @@ class Booking {
     required this.jamMulai,
     required this.jamSelesai,
     this.status = 'pending',
+    this.ruang,
   }) {
     // Validasi data
     _validateData();

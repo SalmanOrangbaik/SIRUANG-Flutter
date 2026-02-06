@@ -27,17 +27,14 @@ class BookingController extends GetxController {
 
   bool get isRuangSelected => selectedRuang.value.id > 0;
 
-  // **VALIDATE BOOKING SEDERHANA - HANYA CEK LOGIN & RUANGAN**
   bool validateBooking() {
     final AuthController authController = Get.find<AuthController>();
 
-    // 1. Cek login saja
     if (!authController.isLoggedIn.value) {
       errorMessage.value = 'Silakan login terlebih dahulu';
       return false;
     }
 
-    // 2. Cek ruangan dipilih saja
     if (!isRuangSelected) {
       errorMessage.value = 'Pilih ruangan terlebih dahulu';
       return false;

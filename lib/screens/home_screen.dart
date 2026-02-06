@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // === BUTTON BOOKING ===
+                      //BUTTON BOOKING
                       InkWell(
                         onTap: () => Get.to(() => const BookingScreen()),
                         borderRadius: BorderRadius.circular(10),
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            // ===== CONTENT =====
+            //  CONTENT
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
               child: Column(

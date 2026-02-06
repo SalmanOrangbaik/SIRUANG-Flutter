@@ -188,4 +188,25 @@ class ApiService {
   Future<void> logout() async {
     print('Logging out from API');
   }
+
+  Future<List<Booking>> getRiwayat() async {
+    final AuthController auth = Get.find<AuthController>();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/riwayat'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${auth.token}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final List data = jsonResponse['data'];
+
+      return data.map((e) => Booking.fromJson(e)).toList();
+    } else {
+      throw Exception('Gagal mengambil riwayat booking');
+    }
+  }
 }
