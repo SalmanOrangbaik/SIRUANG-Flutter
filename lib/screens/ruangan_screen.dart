@@ -34,7 +34,6 @@ class _RuangScreenState extends State<RuangScreen> {
           return _buildEmptyWidget(controller);
         }
 
-        // 🔥 SORT DATA BERDASARKAN ABJAD
         final sortedList = List<Ruangan>.from(controller.ruangList)
           ..sort(
             (a, b) => (a.nama ?? '').compareTo(b.nama ?? ''),
