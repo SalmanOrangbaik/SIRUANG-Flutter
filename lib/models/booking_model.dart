@@ -64,11 +64,43 @@ class Booking {
       id: json['id'],
       userId: json['user_id'],
       ruangId: json['ruang_id'],
-      tanggal: json['tanggal'],
-      jamMulai: json['jam_mulai'],
-      jamSelesai: json['jam_selesai'],
+      tanggal: _normalizeDate(json['tanggal']),
+      jamMulai: _normalizeTime(json['jam_mulai']),
+      jamSelesai: _normalizeTime(json['jam_selesai']),
       status: json['status'] ?? 'pending',
+      ruang: json['ruang'] != null ? Ruangan.fromJson(json['ruang']) : null,
     );
+  }
+
+  static String _normalizeDate(dynamic value) {
+    final raw = (value ?? '').toString().trim();
+    if (raw.isEmpty) {
+      return raw;
+    }
+
+    if (raw.contains('T')) {
+      return raw.split('T').first;
+    }
+
+    if (raw.contains(' ')) {
+      return raw.split(' ').first;
+    }
+
+    return raw;
+  }
+
+  static String _normalizeTime(dynamic value) {
+    final raw = (value ?? '').toString().trim();
+    if (raw.isEmpty) {
+      return raw;
+    }
+
+    final parts = raw.split(':');
+    if (parts.length >= 2) {
+      return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
+    }
+
+    return raw;
   }
 
   Map<String, dynamic> toJson() {

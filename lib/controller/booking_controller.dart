@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:siruangflutter/controller/auth_controller.dart';
+import 'package:siruangflutter/controller/riwayat_controller.dart';
 import '../services/api_service.dart';
 import '../models/booking_model.dart';
 import '../models/ruang_model.dart';
@@ -85,12 +86,20 @@ class BookingController extends GetxController {
 
       isLoading(false);
       successMessage.value = 'Booking berhasil dibuat!';
+
+      if (Get.isRegistered<RiwayatController>()) {
+        Get.find<RiwayatController>().fetchRiwayat();
+      }
+
       update();
 
       print(' Booking sukses!');
     } catch (e) {
       isLoading(false);
-      final errorMsg = e.toString().replaceAll("Exception: ", "");
+      final rawError = e.toString().replaceAll("Exception: ", "").trim();
+      final errorMsg = rawError.toLowerCase().contains('bentrok')
+          ? 'Jadwal bentrok'
+          : rawError;
       errorMessage.value = errorMsg;
       update();
 

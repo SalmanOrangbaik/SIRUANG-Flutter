@@ -6,7 +6,9 @@ import '../controller/booking_controller.dart';
 import '../models/ruang_model.dart';
 
 class BookingScreen extends StatefulWidget {
-  const BookingScreen({super.key});
+  final bool showBackButton;
+
+  const BookingScreen({super.key, this.showBackButton = false});
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();
@@ -23,10 +25,13 @@ class _BookingScreenState extends State<BookingScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.back(),
-        ),
+        automaticallyImplyLeading: widget.showBackButton,
+        leading: widget.showBackButton
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => Get.back(),
+              )
+            : null,
         title: Text(
           'Booking Ruangan',
           style: GoogleFonts.poppins(

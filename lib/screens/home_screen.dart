@@ -78,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       //BUTTON BOOKING
                       InkWell(
-                        onTap: () => Get.to(() => const BookingScreen()),
+                        onTap: () => Get.to(
+                          () => const BookingScreen(showBackButton: true),
+                        ),
                         borderRadius: BorderRadius.circular(10),
                         child: Container(
                           padding: const EdgeInsets.symmetric(

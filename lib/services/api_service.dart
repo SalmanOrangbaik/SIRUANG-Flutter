@@ -136,11 +136,18 @@ class ApiService {
         final errors = jsonResponse['errors'];
         final errorMessage = errors?.values.first?.first ?? 'Data tidak valid';
         throw Exception(errorMessage);
+      } else if (response.statusCode == 409) {
+        final jsonResponse = json.decode(response.body);
+        throw Exception(jsonResponse['message'] ?? 'Jadwal bentrok');
       } else {
         throw Exception('HTTP ${response.statusCode}: ${response.body}');
       }
-    } catch (e) {
+    } on http.ClientException catch (e) {
       throw Exception('Network error: $e');
+    } on FormatException catch (e) {
+      throw Exception('Invalid response format: $e');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -207,6 +214,70 @@ class ApiService {
       return data.map((e) => Booking.fromJson(e)).toList();
     } else {
       throw Exception('Gagal mengambil riwayat booking');
+    }
+  }
+
+  Future<Booking> updateBooking(int bookingId, Booking booking) async {
+    try {
+      final AuthController auth = Get.find<AuthController>();
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/bookings/$bookingId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${auth.token}',
+        },
+        body: json.encode(booking.toJson()),
+      );
+
+      final jsonResponse = json.decode(response.body);
+
+      if (response.statusCode == 200 && jsonResponse['success'] == true) {
+        return Booking.fromJson(jsonResponse['data']);
+      }
+
+      if (response.statusCode == 422) {
+        final errors = jsonResponse['errors'];
+        final errorMessage = errors?.values.first?.first ?? 'Data tidak valid';
+        throw Exception(errorMessage);
+      }
+
+      throw Exception(jsonResponse['message'] ?? 'Gagal mengubah booking');
+    } on http.ClientException catch (e) {
+      throw Exception('Network error: $e');
+    } on FormatException catch (e) {
+      throw Exception('Invalid response format: $e');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> cancelBooking(int bookingId) async {
+    try {
+      final AuthController auth = Get.find<AuthController>();
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/bookings/$bookingId'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${auth.token}',
+        },
+      );
+
+      final jsonResponse = json.decode(response.body);
+
+      if (response.statusCode == 200 && jsonResponse['success'] == true) {
+        return;
+      }
+
+      throw Exception(jsonResponse['message'] ?? 'Gagal membatalkan booking');
+    } on http.ClientException catch (e) {
+      throw Exception('Network error: $e');
+    } on FormatException catch (e) {
+      throw Exception('Invalid response format: $e');
+    } catch (e) {
+      rethrow;
     }
   }
 }

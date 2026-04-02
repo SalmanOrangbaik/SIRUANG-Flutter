@@ -5,12 +5,13 @@ import 'package:siruangflutter/models/booking_model.dart';
 import 'package:siruangflutter/screens/ruangan_screen.dart';
 import 'package:siruangflutter/screens/home_screen.dart';
 import 'package:siruangflutter/screens/booking_screen.dart';
+import 'package:siruangflutter/screens/riwayat_screen.dart';
 import 'package:siruangflutter/controller/ruang_controller.dart';
 import 'package:siruangflutter/controller/booking_controller.dart';
 import 'package:siruangflutter/controller/auth_controller.dart';
+import 'package:siruangflutter/controller/riwayat_controller.dart';
 import 'package:siruangflutter/services/api_service.dart';
 import 'package:get_storage/get_storage.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
@@ -59,18 +60,24 @@ class _MainNavigationState extends State<MainNavigation> {
     const HomeScreen(),
     const RuangScreen(),
     const BookingScreen(),
+    RiwayatPage(),
   ];
 
   final List<String> _titles = [
     "Beranda",
     "Ruangan",
     "Booking",
+    "Riwayat",
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
+    if (index == 3 && Get.isRegistered<RiwayatController>()) {
+      Get.find<RiwayatController>().fetchRiwayat();
+    }
   }
 
   void _showLoginDialog() {
@@ -168,6 +175,10 @@ class _MainNavigationState extends State<MainNavigation> {
     if (success) {
       _clearForm();
       Navigator.of(context).pop();
+
+      if (Get.isRegistered<RiwayatController>()) {
+        Get.find<RiwayatController>().fetchRiwayat();
+      }
     }
   }
 
@@ -288,6 +299,10 @@ class _MainNavigationState extends State<MainNavigation> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month_rounded),
             label: 'Booking',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history_rounded),
+            label: 'Riwayat',
           ),
         ],
       ),
