@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siruangflutter/models/ruang_model.dart';
 import 'package:get/get.dart';
+import 'package:siruangflutter/screens/booking_screen.dart';
+import 'package:siruangflutter/controller/booking_controller.dart';
 
 class RuangDetailScreen extends StatelessWidget {
   final Ruangan ruang;
@@ -30,11 +32,13 @@ class RuangDetailScreen extends StatelessWidget {
                 Icon(Icons.meeting_room_rounded,
                     size: 28, color: Colors.blue[700]),
                 const SizedBox(width: 10),
-                Text(
-                  ruang.nama,
-                  style: GoogleFonts.poppins(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    ruang.nama,
+                    style: GoogleFonts.poppins(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -73,31 +77,69 @@ class RuangDetailScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            if (ruang.fasilitas.isNotEmpty)
-              ...ruang.fasilitas.map(
-                (f) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.check_circle,
-                          color: Colors.green, size: 18),
-                      const SizedBox(width: 8),
-                      Text(
-                        f,
-                        style: GoogleFonts.poppins(fontSize: 15),
+            Expanded(
+              child: SingleChildScrollView(
+                child: ruang.fasilitas.isNotEmpty
+                    ? Column(
+                        children: ruang.fasilitas
+                            .map(
+                              (f) => Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.check_circle,
+                                        color: Colors.green, size: 18),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        f,
+                                        style: GoogleFonts.poppins(fontSize: 15),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      )
+                    : Text(
+                        "Tidak ada fasilitas",
+                        style: GoogleFonts.poppins(
+                          color: Colors.grey[500],
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
-                    ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  final BookingController bookingController =
+                      Get.find<BookingController>();
+                  bookingController.setSelectedRuang(ruang);
+                  Get.to(() => const BookingScreen(showBackButton: true));
+                },
+                icon: const Icon(Icons.calendar_month_rounded),
+                label: Text(
+                  'Booking Sekarang',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              )
-            else
-              Text(
-                "Tidak ada fasilitas",
-                style: GoogleFonts.poppins(
-                  color: Colors.grey[500],
-                  fontStyle: FontStyle.italic,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[700],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
+            ),
           ],
         ),
       ),

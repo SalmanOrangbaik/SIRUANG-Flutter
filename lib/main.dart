@@ -56,26 +56,14 @@ class _MainNavigationState extends State<MainNavigation> {
     Get.put(BookingController());
   }
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const RuangScreen(),
-    const BookingScreen(),
-    RiwayatPage(),
-  ];
-
-  final List<String> _titles = [
-    "Beranda",
-    "Ruangan",
-    "Booking",
-    "Riwayat",
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    if (index == 3 && Get.isRegistered<RiwayatController>()) {
+    if (authController.isLoggedIn.value &&
+        index == 3 &&
+        Get.isRegistered<RiwayatController>()) {
       Get.find<RiwayatController>().fetchRiwayat();
     }
   }
@@ -196,24 +184,72 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _titles[_selectedIndex],
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+    return Obx(() {
+      final isLoggedIn = authController.isLoggedIn.value;
+
+      final screens = <Widget>[
+        const HomeScreen(),
+        const RuangScreen(),
+        const BookingScreen(),
+        if (isLoggedIn) RiwayatPage(),
+      ];
+
+      final titles = <String>[
+        "Beranda",
+        "Ruangan",
+        "Booking",
+        if (isLoggedIn) "Riwayat",
+      ];
+
+      final navItems = <BottomNavigationBarItem>[
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.home_rounded),
+          label: 'Home',
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        surfaceTintColor: Colors.transparent,
-        actions: [
-          Obx(() {
-            if (authController.isLoggedIn.value &&
-                authController.user.value != null) {
-              return PopupMenuButton<String>(
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.meeting_room_rounded),
+          label: 'Ruangan',
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month_rounded),
+          label: 'Booking',
+        ),
+        if (isLoggedIn)
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.history_rounded),
+            label: 'Riwayat',
+          ),
+      ];
+
+      if (_selectedIndex >= screens.length) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            setState(() {
+              _selectedIndex = 0;
+            });
+          }
+        });
+      }
+
+      final currentIndex =
+          _selectedIndex >= screens.length ? 0 : _selectedIndex;
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            titles[currentIndex],
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 1,
+          surfaceTintColor: Colors.transparent,
+          actions: [
+            if (isLoggedIn && authController.user.value != null)
+              PopupMenuButton<String>(
                 onSelected: (value) {
                   if (value == 'logout') {
                     authController.logout();
@@ -267,45 +303,27 @@ class _MainNavigationState extends State<MainNavigation> {
                     ],
                   ),
                 ),
-              );
-            } else {
-              return IconButton(
+              )
+            else
+              IconButton(
                 icon: const Icon(Icons.login_rounded),
                 onPressed: _showLoginDialog,
                 tooltip: 'Login',
                 color: const Color(0xFF2196F3),
-              );
-            }
-          }),
-        ],
-      ),
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF2196F3),
-        unselectedItemColor: Colors.grey,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.meeting_room_rounded),
-            label: 'Ruangan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_rounded),
-            label: 'Booking',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history_rounded),
-            label: 'Riwayat',
-          ),
-        ],
-      ),
-    );
+              ),
+          ],
+        ),
+        body: screens[currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          selectedItemColor: const Color(0xFF2196F3),
+          unselectedItemColor: Colors.grey,
+          currentIndex: currentIndex,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          items: navItems,
+        ),
+      );
+    });
   }
 }
