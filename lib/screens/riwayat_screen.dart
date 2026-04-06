@@ -63,7 +63,7 @@ class RiwayatPage extends StatelessWidget {
                     Text('Tanggal : ${item.tanggal}'),
                     Text('Jam : ${item.jamMulai} - ${item.jamSelesai}'),
                     const SizedBox(height: 10),
-                    if (item.id != null && item.status != 'disetujui')
+                    if (item.id != null && item.status == 'pending')
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
