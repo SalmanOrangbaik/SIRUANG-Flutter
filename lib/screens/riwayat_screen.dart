@@ -62,6 +62,8 @@ class RiwayatPage extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text('Tanggal : ${item.tanggal}'),
                     Text('Jam : ${item.jamMulai} - ${item.jamSelesai}'),
+                    if (item.keterangan.trim().isNotEmpty)
+                      Text('Keterangan : ${item.keterangan}'),
                     const SizedBox(height: 10),
                     if (item.id != null && item.status == 'pending')
                       Wrap(
@@ -127,6 +129,8 @@ class RiwayatPage extends StatelessWidget {
     DateTime selectedDate = DateTime.parse(booking.tanggal);
     TimeOfDay startTime = _parseTime(booking.jamMulai);
     TimeOfDay endTime = _parseTime(booking.jamSelesai);
+    final TextEditingController keteranganController =
+        TextEditingController(text: booking.keterangan);
 
     await Get.dialog(
       StatefulBuilder(
@@ -253,6 +257,20 @@ class RiwayatPage extends StatelessWidget {
                       child: Text(_formatTime(endTime)),
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Keterangan',
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: keteranganController,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Tambahkan keterangan booking',
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -273,6 +291,7 @@ class RiwayatPage extends StatelessWidget {
                               '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}',
                           jamMulai: _formatTime(startTime),
                           jamSelesai: _formatTime(endTime),
+                          keterangan: keteranganController.text.trim(),
                           status: booking.status,
                           ruang: selectedRuang,
                         );
@@ -287,6 +306,8 @@ class RiwayatPage extends StatelessWidget {
         },
       ),
     );
+
+    keteranganController.dispose();
   }
 
   TimeOfDay _parseTime(String time) {

@@ -8,6 +8,7 @@ import '../models/ruang_model.dart';
 
 class BookingController extends GetxController {
   final ApiService _apiService = ApiService();
+  final TextEditingController keteranganController = TextEditingController();
 
   var isLoading = false.obs;
   var selectedDate = DateTime.now().obs;
@@ -73,6 +74,7 @@ class BookingController extends GetxController {
         tanggal: formattedDate,
         jamMulai: formattedStartTime,
         jamSelesai: formattedEndTime,
+        keterangan: keteranganController.text.trim(),
         status: 'pending',
       );
 
@@ -86,6 +88,7 @@ class BookingController extends GetxController {
 
       isLoading(false);
       successMessage.value = 'Booking berhasil dibuat!';
+      keteranganController.clear();
 
       if (Get.isRegistered<RiwayatController>()) {
         Get.find<RiwayatController>().fetchRiwayat();
@@ -135,5 +138,11 @@ class BookingController extends GetxController {
   void setSelectedEndTime(TimeOfDay time) {
     selectedEndTime.value = time;
     errorMessage.value = '';
+  }
+
+  @override
+  void onClose() {
+    keteranganController.dispose();
+    super.onClose();
   }
 }

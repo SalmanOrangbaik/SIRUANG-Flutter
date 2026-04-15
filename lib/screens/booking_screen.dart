@@ -86,6 +86,12 @@ class _BookingScreenState extends State<BookingScreen> {
                           (time) => bookingC.setSelectedEndTime(time),
                         )),
 
+                    const SizedBox(height: 24),
+
+                    _buildSectionTitle('Keterangan'),
+                    const SizedBox(height: 8),
+                    _buildKeteranganField(bookingC),
+
                     const SizedBox(height: 32),
 
                     // Error/Success Message
@@ -300,6 +306,30 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
     );
   }
+
+  Widget _buildKeteranganField(BookingController bookingC) {
+    return TextField(
+      controller: bookingC.keteranganController,
+      maxLines: 3,
+      decoration: InputDecoration(
+        hintText: 'Tambahkan keterangan booking...',
+        hintStyle: GoogleFonts.poppins(color: Colors.grey[500]),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue[700]!),
+        ),
+      ),
+      style: GoogleFonts.poppins(),
+    );
+  }
+
 
   Widget _buildBookingButton(BookingController bookingC) {
     return Obx(() {

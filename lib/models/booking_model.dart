@@ -7,6 +7,7 @@ class Booking {
   final String tanggal;
   final String jamMulai;
   final String jamSelesai;
+  final String keterangan;
   final String status;
   final Ruangan? ruang;
 
@@ -17,6 +18,7 @@ class Booking {
     required this.tanggal,
     required this.jamMulai,
     required this.jamSelesai,
+    this.keterangan = '',
     this.status = 'pending',
     this.ruang,
   }) {
@@ -67,6 +69,7 @@ class Booking {
       tanggal: _normalizeDate(json['tanggal']),
       jamMulai: _normalizeTime(json['jam_mulai']),
       jamSelesai: _normalizeTime(json['jam_selesai']),
+      keterangan: (json['keterangan'] ?? '').toString(),
       status: json['status'] ?? 'pending',
       ruang: json['ruang'] != null ? Ruangan.fromJson(json['ruang']) : null,
     );
@@ -110,6 +113,7 @@ class Booking {
       'tanggal': tanggal,
       'jam_mulai': jamMulai,
       'jam_selesai': jamSelesai,
+      'keterangan': keterangan,
       'status': status,
     };
   }
